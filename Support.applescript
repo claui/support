@@ -75,7 +75,13 @@ tell application "OmniFocus"
 		
 		tell application id "com.apple.finder"
 			repeat with aFolder in thePaths
-				open folder aFolder
+				try
+					set finderAlias to my alias aFolder
+				on error
+					set aPrefix to path to home folder as text
+					set finderAlias to my alias(aPrefix & aFolder)
+				end try
+				open folder finderAlias
 			end repeat
 			activate
 		end tell
@@ -134,5 +140,5 @@ on identifyFolder(theNote)
 	set text item delimiters to {folderDelim & " ", folderDelim}
 	set theText to every text item of theText
 	set text item delimiters to ""
-	set theText to (path to home folder as text) & (theText as text)
+	set theText to theText as text
 end identifyFolder
